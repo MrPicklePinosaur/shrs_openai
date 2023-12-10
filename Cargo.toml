@@ -15,4 +15,6 @@ repository = "https://github.com/MrPicklePinosaur/shrs_openai"
 [dependencies]
 shrs = { git = "https://github.com/MrPicklePinosaur/shrs" }
 
+serde = { version = "1", features = ["derive"], default-features = false }
+serde_json = { version = "1", default-features = false }
 openai-api-rs = { version = "2.1" }
