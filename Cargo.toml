@@ -1,0 +1,16 @@
+[package]
+name = "shrs_openai"
+version = "0.0.2"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+authors = ["Daniel Liu <mr.picklepinosaur@gmail.com>"]
+description = ""
+categories = ["command-line-interface", "command-line-utilities", "development-tools"]
+keywords = ["shrs", "shell", "posix", "unix"]
+readme = "README.md"
+repository = "https://github.com/MrPicklePinosaur/shrs_openai"
+
+[features]
+
+[dependencies]
+shrs = { git = "https://github.com/MrPicklePinosaur/shrs" }
