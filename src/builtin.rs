@@ -8,7 +8,7 @@ use openai_api_rs::v1::message::{CreateMessageRequest};
 use openai_api_rs::v1::run::CreateRunRequest;
 use openai_api_rs::v1::thread::CreateThreadRequest;
 
-use crate::OpenaiState;
+use crate::OpenaiPlugin;
 
 #[derive(Default)]
 pub struct OpenaiBuiltin {
@@ -36,7 +36,7 @@ impl BuiltinCmd for OpenaiBuiltin {
 
         let args = &args[1..].join(" ");
 
-        let Some(state) = ctx.state.get_mut::<OpenaiState>() else { return Err(anyhow::anyhow!("openai state not found")) };
+        let Some(state) = ctx.state.get_mut::<OpenaiPlugin>() else { return Err(anyhow::anyhow!("openai state not found")) };
 
         // complete the prompt 
         let req = ChatCompletionRequest::new(
