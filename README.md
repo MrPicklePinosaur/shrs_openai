@@ -8,7 +8,10 @@
 
 </div>
 
-This is a plugin for [shrs](https://github.com/MrPicklePinosaur/shrs).
+This is a plugin for [shrs](https://github.com/MrPicklePinosaur/shrs). It enables the ability to use ChatGPT to help you out on common command like tasks like:
+- ask to write a command for you (list all stopped docker containers and delete them)
+- answer questions based on your shell environment (why did my last command not work?)
+- pass contents of files (why is this JSON file deformed?)
 
 ## Using this plugin
 
@@ -22,8 +25,10 @@ Then include this plugin when initializing shrs
 use shrs::prelude::*;
 use shrs_openai::OpenaiPlugin;
 
+let api_key = std::env::var("OPENAI_KEY").unwrap().to_string();
+
 let myshell = ShellBuilder::default()
-    .with_plugin(OpenaiPlugin::new())
+    .with_plugin(OpenaiPlugin::new(api_key))
     .build()
     .unwrap();
 
