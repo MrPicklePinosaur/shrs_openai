@@ -30,7 +30,7 @@ impl BuiltinCmd for OpenaiBuiltin {
         sh: &Shell,
         ctx: &mut Context,
         rt: &mut Runtime,
-        args: &Vec<String>,
+        args: &[String],
     ) -> anyhow::Result<CmdOutput> {
 
         if args.len() <= 1 {
