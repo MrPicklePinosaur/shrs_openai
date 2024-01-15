@@ -87,7 +87,8 @@ impl BuiltinCmd for OpenaiBuiltin {
                 let arguments = function_call.arguments.clone().unwrap();
                 if fn_name == "shell_command" {
                     let cmd: Command = serde_json::from_str(&arguments)?;
-                    println!("{}", cmd.command);
+                    // TODO could make auto-run configurable
+                    ctx.prompt_content_queue.push(PromptContent { content: cmd.command, auto_run: false });
                 } else {
                     eprintln!("unhandled function call: {fn_name}");
                 }
