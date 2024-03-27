@@ -1,9 +1,16 @@
 use shrs::prelude::*;
 use shrs_openai::OpenaiPlugin;
 
+use openai_api_rs::v1::chat_completion::{self, ChatCompletionRequest, FunctionCallType, ChatCompletionMessage, MessageRole};
+
 fn main() {
 
-    let api_key = std::env::var("OPENAI_KEY").unwrap().to_string();
+    const OPENAI_KEY_ENV: &str = "OPENAI_KEY";
+
+    let Ok(api_key) = std::env::var(OPENAI_KEY_ENV) else {
+        eprintln!("Missing '{OPENAI_KEY_ENV}' environment variable");
+        std::process::exit(1);
+    };
 
     let myshell = ShellBuilder::default()
         .with_plugin(OpenaiPlugin::new(api_key))

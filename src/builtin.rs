@@ -2,8 +2,8 @@ use std::collections::HashMap;
 
 use serde::{Serialize, Deserialize};
 use shrs::prelude::*;
-
 use openai_api_rs::v1::api::Client;
+
 use openai_api_rs::v1::chat_completion::{self, ChatCompletionRequest, FunctionCallType, ChatCompletionMessage, MessageRole};
 use openai_api_rs::v1::common::GPT3_5_TURBO_0613;
 use openai_api_rs::v1::assistant::AssistantRequest;
@@ -51,17 +51,20 @@ impl BuiltinCmd for OpenaiBuiltin {
             required: None,
             items: None,
         }));
-        let req = ChatCompletionRequest::new(
-            GPT3_5_TURBO_0613.to_string(),
-            vec![
-            ChatCompletionMessage { role: MessageRole::system, content: "you will help write commands for the posix shell based on a user prompt. treat all messages after this as a request to generate a command. output only the command, do not provide any explanation.".to_string(), name: None, function_call: None },
-            chat_completion::ChatCompletionMessage {
-                role: chat_completion::MessageRole::user,
+
+        state.chat_history.push(
+            chat_completion::ChatCompletionMessage { role: chat_completion::MessageRole::user,
                 content: args.to_string(),
                 name: None,
                 function_call: None,
-            }],
+            }
+        );
+
+        let req = ChatCompletionRequest::new(
+            GPT3_5_TURBO_0613.to_string(),
+            state.chat_history.clone() // TODO this can be a pretty big copy
         )
+
         .functions(vec![chat_completion::Function {
             name: String::from("shell_command"),
             description: Some(String::from("a command to run on the command line")),
