@@ -15,6 +15,7 @@ use crate::{OpenaiPlugin, OpenaiState};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Command {
+    description: String,
     command: String,
 }
 
@@ -53,14 +54,13 @@ impl BuiltinCmd for OpenaiBuiltin {
 
         if args.len() >= 2 {
             if args[1] == "-e" {
-                println!("passed explain flag");
                 flag_explain = true;
                 shift += 1;
             }
         }
 
         let args = &args[shift..].join(" ");
-        println!("args {args}");
+        // println!("args {args}");
 
         let Some(state) = ctx.state.get_mut::<OpenaiState>() else { return Err(anyhow::anyhow!("openai state not found")) };
 
@@ -102,12 +102,20 @@ impl BuiltinCmd for OpenaiBuiltin {
                     let fn_name = tool_call.function.name.clone().unwrap();
                     let arguments = tool_call.function.arguments.clone().unwrap();
                     if fn_name == "shell_command" {
+
                         let cmd: Command = serde_json::from_str(&arguments)?;
+                        println!("{}", cmd.description.bold());
                         // TODO could make auto-run configurable
                         ctx.prompt_content_queue.push(PromptContent { content: cmd.command, auto_run: false });
+
                     } else if fn_name == "explanation" {
+
+                        // apply some nice looking formatting
                         let explanation: Explanation = serde_json::from_str(&arguments)?;
-                        println!("{}", explanation.plaintext);
+                        let wrapped = textwrap::wrap(&explanation.plaintext, 80);
+                        let formatted = wrapped.iter().map(|s| format!(" | {}", s.italic())).collect::<Vec<_>>().join("\n");
+                        println!("{}", formatted);
+
                     } else {
                         eprintln!("unhandled function call: {fn_name}");
                     }
@@ -140,6 +148,14 @@ impl OpenaiBuiltin {
             required: None,
             items: None,
         }));
+        cmd_properties.insert("description".to_string(), Box::new(chat_completion::JSONSchemaDefine {
+            schema_type: Some(chat_completion::JSONSchemaType::String),
+            description: Some("description of what the command does".to_string()),
+            enum_values: None,
+            properties: None,
+            required: None,
+            items: None,
+        }));
 
         vec![
             chat_completion::Tool {
@@ -150,7 +166,7 @@ impl OpenaiBuiltin {
                     parameters: chat_completion::FunctionParameters {
                         schema_type: chat_completion::JSONSchemaType::Object,
                         properties: Some(cmd_properties),
-                        required: Some(vec![String::from("command")]),
+                        required: Some(vec![String::from("command"), String::from("description")]),
                     },
                 },
             }
