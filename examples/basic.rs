@@ -1,8 +1,6 @@
 use shrs::prelude::*;
 use shrs_openai::OpenaiPlugin;
 
-use openai_api_rs::v1::chat_completion::{self, ChatCompletionRequest, FunctionCallType, ChatCompletionMessage, MessageRole};
-
 fn main() {
 
     const OPENAI_KEY_ENV: &str = "OPENAI_KEY";

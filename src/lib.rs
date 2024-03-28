@@ -3,7 +3,7 @@ use shrs::prelude::*;
 mod builtin;
 
 use openai_api_rs::v1::api::Client;
-use openai_api_rs::v1::chat_completion::{self, ChatCompletionRequest, FunctionCallType, ChatCompletionMessage, MessageRole};
+use openai_api_rs::v1::chat_completion::{self, ChatCompletionRequest, ChatCompletionMessage, MessageRole, Content};
 
 pub struct OpenaiState {
     pub client: Client,
@@ -27,7 +27,7 @@ impl Plugin for OpenaiPlugin {
 
         // Provide system message
         let chat_history = vec![
-            ChatCompletionMessage { role: MessageRole::system, content: "you will help write commands for the posix shell based on a user prompt. treat all messages after this as a request to generate a command. output only the command, do not provide any explanation.".to_string(), name: None, function_call: None },
+            ChatCompletionMessage { role: MessageRole::system, content: Content::Text("you will help write commands for the posix shell based on a user prompt. treat all messages after this as a request to generate a command. output only the command, do not provide any explanation.".into()), name: None, },
         ];
 
         let client = Client::new(self.api_key.clone());
