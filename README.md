@@ -1,6 +1,6 @@
 <div align="center">
 
-# shrs_openai
+<img src="media/shrs_openai_banner.png" alt="shrs_openai">
 
 [![crates.io](https://img.shields.io/crates/v/shrs_openai.svg)](https://crates.io/crates/shrs_openai)
 [![docs.rs](https://docs.rs/shrs_openai/badge.svg)](https://docs.rs/shrs_openai)

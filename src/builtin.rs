@@ -108,6 +108,7 @@ impl BuiltinCmd for OpenaiBuiltin {
                         // TODO could make auto-run configurable
                         ctx.prompt_content_queue.push(PromptContent { content: cmd.command, auto_run: false });
 
+                    } else if fn_name == "info_request" {
                     } else if fn_name == "explanation" {
 
                         // apply some nice looking formatting
@@ -157,6 +158,17 @@ impl OpenaiBuiltin {
             items: None,
         }));
 
+        let mut info_properties = HashMap::new();
+        info_properties.insert("type".to_string(), Box::new(chat_completion::JSONSchemaDefine {
+            schema_type: Some(chat_completion::JSONSchemaType::String),
+            description: Some("the type of information to request from the yser".to_string()),
+            enum_values: Some(vec!["history".into()]),
+            properties: None,
+            required: None,
+            items: None,
+        }));
+
+
         vec![
             chat_completion::Tool {
                 r#type: chat_completion::ToolType::Function,
@@ -167,6 +179,18 @@ impl OpenaiBuiltin {
                         schema_type: chat_completion::JSONSchemaType::Object,
                         properties: Some(cmd_properties),
                         required: Some(vec![String::from("command"), String::from("description")]),
+                    },
+                },
+            },
+            chat_completion::Tool {
+                r#type: chat_completion::ToolType::Function,
+                function: chat_completion::Function {
+                    name: String::from("info_request"),
+                    description: Some(String::from("if there is insufficient information, can ask for more from user")),
+                    parameters: chat_completion::FunctionParameters {
+                        schema_type: chat_completion::JSONSchemaType::Object,
+                        properties: Some(info_properties),
+                        required: Some(vec![String::from("type")]),
                     },
                 },
             }
