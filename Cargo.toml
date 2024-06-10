@@ -1,6 +1,6 @@
 [package]
 name = "shrs_openai"
-version = "0.0.2"
+version = "0.0.6"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 authors = ["Daniel Liu <mr.picklepinosaur@gmail.com>"]
@@ -13,7 +13,7 @@ repository = "https://github.com/MrPicklePinosaur/shrs_openai"
 [features]
 
 [dependencies]
-shrs = { git = "https://github.com/MrPicklePinosaur/shrs" }
+shrs = { version = "0.0.6" }
 
 serde = { version = "1", features = ["derive"], default-features = false }
 serde_json = { version = "1", default-features = false }

@@ -1,3 +1,4 @@
+use builtin::openai_builtin;
 use shrs::prelude::*;
 
 mod builtin;
@@ -36,8 +37,8 @@ impl Plugin for OpenaiPlugin {
             chat_history
         };
 
-        shell.state.insert(state);
-        shell.builtins.insert("ai", builtin::OpenaiBuiltin::new());
+        shell.states.insert(state);
+        shell.builtins.insert("ai", openai_builtin);
         Ok(())
     }
 }
